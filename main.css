@@ -17,6 +17,7 @@ button:focus {
 }
 .title {
 	margin-top: 20px;
+	font-size: 55px;
 	
 }
 .selected {
@@ -66,10 +67,31 @@ hr {
 	flex-basis: 20%;
 	flex-direction: column;
 }
+.slide-enter {
+	transition: all 2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-enter-active {
+	transition: all 3s ease;
+}
+.slide-leave-active {
+	transition: all 2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-enter-active, .side-leave-to{
+	transition: all 2s;
+	opacity: .4;
+	transform: translate(40px, 0);
+} 
+.deleteBtnDiv {
+	display: flex;
+	justify-content: space-between;
+	flex-basis:100%;
+	transition-duration: 3s;
+}
 .deleteBtn {
 	display: flex;
-	flex-wrap: wrap;
-	flex-direction: column;
+	flex-direction: row;
+	text-align: center;
+	transition-duration: 3s;
 }
 .deleteBtnYes {
 	background-color: lightgreen;
@@ -104,7 +126,7 @@ hr {
 }
 .textDiv {
 	display: flex;
-	flex-basis: 80%;
+	flex-basis: 70%;
 	margin: 20px;
 }
 textarea {
