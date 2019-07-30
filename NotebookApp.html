@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>NoteBook</title>
+	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/main.css">
+	<link href="https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap" rel="stylesheet">
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
+</head>
+<style type="text/css">
+	.tempDiv {
+		background-color: "blue";
+	}
+</style>
+<body>
+<!-- add vue.js -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<!-- content -->
+
+<div id="app">
+  <div class="wrapper">
+  	<div class="titleDiv">
+  	<h1 class="title">{{title}}</h1>	
+  	</div>
+	<div class="buttonsDiv">
+		<!-- <button @click.once="getNotes">All</button> -->
+		<button @click="show = true, clear() ">New</button>
+
+		<button
+		class="deleteBtn" 
+		:disabled="disabledDelete"
+		@click="deleteButtons = true" 
+		>Delete
+		</button>
+
+		<button 
+		class="deleteBtnYes" 
+		@click="trash(noteId[selectedNote]), refresh()"
+		v-show="deleteButtons">Yes</button>
+		<button 
+		class="deleteBtnNo" 
+		@click="deleteButtons = false"
+		class="deleteBtn"
+		v-show="deleteButtons">No</button>
+	</div>
+
+	<div v-show="show">
+		<input 
+		placeholder="Enter title" 
+		v-model:value="inputTitle" 
+		type="text" name="title"
+		>
+		<input id="category" 
+		:style="{backgroundColor: 'darkgrey', color: 'white'}"
+		v-bind:value="noteCategory[selectedCategory] "  
+		type="text" disabled="true" name="category">
+		<button 
+		@click="makeNew(inputTitle), refresh()" type="submit">Create</button>
+	</div>
+
+	<div class="main">
+	<div class="category">
+		<h2 class="catH2" v-show="notes.length">Categories</h2>
+			<button 
+			@click="selectedCategory = index, selectedCat(), disabledSave = true, disabledDelete = true" 
+			:class="{selectedCategory: index === selectedCategory}"
+			v-for="(category, index) in noteCategory">{{category}}
+			</button>	
+
+			<button 
+			class="addCategory" 
+			@click="addCat = true, newCatValue = null" 
+			v-show="notes.length"
+			>
+			+
+			</button>
+			<input 
+			type="text" 
+			placeholder="Enter New Category" v-show="addCat"
+			v-model:value="newCatValue"
+			@keyup.enter="addCategory()"
+			>
+	</div>
+	<div class="headerSave">
+		<h4 v-show="notes.length">Notes:</h4>
+			<button 
+				class="save" 
+				@click="save(noteId[selectedNote],noteBody[selectedNote]), disabledSave = true" 
+				type="submit"
+				:disabled="disabledSave" 
+				>Save
+			</button>
+	</div>
+	
+	<div class="notes">
+		<ul class="noteList">
+			<li 
+				v-if="note.category === noteCategory[selectedCategory]"
+				:class="{selected: index === selectedNote}" 
+				v-for="(note, index) in noteObj" 
+				@click="liClick(index), disabledDelete = false" 
+				>{{note.title}} 
+			</li>
+		</ul>
+		
+
+		<div class="textDiv">
+			<div class="toolbar">
+				
+			</div>
+			<textarea 
+			id="text" 
+			@keyup="disabledSave = false" 
+			v-model:value="noteBody[selectedNote]"
+			:class="{fontBold: fontBold}" 
+			>
+			</textarea>
+	</div>
+		</div>
+	</div>
+  </div>	
+
+</div>
+
+<footer>
+	<p>Created By: Jonathan Cooper 2019</p>
+</footer>
+
+</body>
+</html>
+
+<script type="text/javascript">
+
+
+
+let app = new Vue({
+	el: '#app',
+	data: {
+		title: "NoteBook App",
+		inputTitle: null,
+		show: false,
+		showLis: false,
+		noteObj: [],
+		noteId: [],
+		notes: [],
+		noteBody: [],
+		noteCategory: [],
+		selectedCategory: 0,
+		selectedNote: null,
+		noteCatind: 0,
+		addCat: false,
+		newCatValue: null,
+		disabledSave: true,
+		disabledDelete: true,
+		deleteButtons: false,
+		fontBold: true,
+		isActive: false,
+		divText: "Farting"
+	},
+	computed: {
+		helloyo(){
+			return this.hello + " motha truckaaaa!"
+		},
+	},
+	methods: {
+		makeNew(title){
+			if(title != null){
+		axios.post("/api", {
+			title: title,
+			category: this.noteCategory[this.selectedCategory] || "Defaults",
+			content: ''
+		}).then(()=>{
+			this.inputTitle = " ";
+			this.show = false;
+
+			})
+		  }
+		},
+		liClick(ind){
+			this.selectedNote = ind;
+		},
+		catClick(ind){
+			this.selectedCategory = ind;
+			console.log(this.selectedCategory)
+		},
+		getNotes(){
+			console.log("running");
+			axios.get('/api')
+			.then((res)=>{
+				res.data.forEach((note)=>{
+					 this.notes.push(note.title);
+					 this.noteBody.push(note.content);
+					 this.noteId.push(note._id);
+					 this.noteCategory.push(note.category);
+					 // console.log(note)
+					 this.noteObj.push(note);
+				})
+				// remove duplicates
+				console.log(this.noteCategory = [...new Set(this.noteCategory)])
+			})
+		},
+		save(id, val){
+			let url = `/api/` + id;
+			axios.put(url, {content: val})
+			console.log(url, val);
+		},
+		trash(id){
+			axios.delete('/api/' + id);
+			console.log(id + 'has been deleted')
+		},
+		selectedCat(){
+			this.selectedNote = null;
+		},
+		addCategory(){
+			this.noteCategory.push(this.newCatValue);
+			this.addCat = false
+		},
+		clear(){
+			this.noteCategory[0];
+		},
+		refresh(){
+			location.reload(true);
+		}
+	}
+
+})
+
+
+						// reg jambascramps
+
+// display all notes on load
+window.addEventListener('load', ()=>{
+	app.getNotes();
+	console.log("page loaded successfully");
+})
+
+
+
+
+
+
+
+
+</script>

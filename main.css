@@ -1,0 +1,135 @@
+/*notebook app*/
+
+*:focus {
+	outline: none;
+}
+* {
+	font-family: 'Saira Stencil One', cursive;
+}
+body {
+	background-color: #def;
+}
+button:focus {
+	outline: none;
+}
+.titleDiv {
+	/*background-color: #E4BE9E;*/
+}
+.title {
+	margin-top: 20px;
+	
+}
+.selected {
+	color: blue;
+	font-size: 22px;
+}
+.selectedCategory {
+	background-color: lightblue;
+}
+.addCategory {
+	background-color: green;
+	color: white;
+}
+.wrapper {
+	display: flex;
+	flex-direction: column;
+}
+.category {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.catH2 {
+	display: block;
+	flex-basis: 100%;
+	text-align: center;
+	margin: 20px 5px;
+}
+.headerSave {
+	display: flex;
+}
+h4 {
+	margin-top: 30px;
+	flex-basis: 80%;
+}
+hr {
+	width: 80%;
+	display: block;
+}
+.notes {
+	display: flex;
+	flex-direction: row;
+}
+.noteList {
+	display: flex;
+	flex-basis: 20%;
+	flex-direction: column;
+}
+.deleteBtn {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+}
+.deleteBtnYes {
+	background-color: lightgreen;
+	color: white;
+}
+.deleteBtnNo {
+	background-color: red;
+	color: white;
+}
+.title {
+	text-align: center;
+	margin-bottom: 40px
+}
+.buttonsDiv {
+	display: flex;
+	flex-direction: row;
+	margin: 10px;
+	justify-content: space-around;
+}
+.buttonsDiv button {
+	flex-basis: 100px
+}
+.main {
+	display: flex;
+	flex-direction: column;
+}
+.save {
+	flex-basis: 18%;
+	width: 17%;
+	align-self: flex-end;
+	margin-right: 20px;
+}
+.textDiv {
+	display: flex;
+	flex-basis: 80%;
+	margin: 20px;
+}
+textarea {
+	border-color: rgba(103,184,173,1);
+	height: 65vh;
+	padding: 10px;
+	cursor:	pointer;
+	width: 100%;
+	border-radius: 15px;
+	box-shadow: 6px 7px 35px 5px rgba(103,184,173,1);
+}
+.fontBold {
+	font-weight: bolder;
+}
+footer {
+	text-align: center;
+	font-size: 10px;
+}
+
+
+
+/*media queries*/
+@media screen and (max-width: 660px){
+	.notes {
+		display: flex;
+		flex-direction: column;
+	}
+} 
